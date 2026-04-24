@@ -21,17 +21,22 @@
 'use strict';
 
 const axios = require('axios');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { ChatGroq } = require('@langchain/groq');
 
-// ─── Gemini client (lazy singleton) ──────────────────────
-let _genAI = null;
-const getGeminiClient = () => {
-  if (!_genAI) {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key) throw new Error('GEMINI_API_KEY is missing from .env');
-    _genAI = new GoogleGenerativeAI(key);
+// ─── Groq client (lazy singleton — FREE tier) ─────────────
+let _groqClient = null;
+const getGroqClient = () => {
+  if (!_groqClient) {
+    const key = process.env.GROQ_API_KEY;
+    if (!key || key === 'your_groq_api_key_here') throw new Error('GROQ_API_KEY missing from .env');
+    _groqClient = new ChatGroq({
+      model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
+      apiKey: key,
+      temperature: 0.1,
+      maxTokens: 800,
+    });
   }
-  return _genAI;
+  return _groqClient;
 };
 
 // ─── In-memory price cache ────────────────────────────────
@@ -160,7 +165,7 @@ const fetchPricesSerper = async (foodNames) => {
     }
   );
 
-  // Extract search snippets and use Gemini to parse prices from them
+  // Extract search snippets and use Groq to parse prices from them
   const snippets = [
     ...(response.data?.organic || []).map(r => `${r.title}: ${r.snippet}`),
     ...(response.data?.knowledgeGraph ? [`${response.data.knowledgeGraph.title}: ${response.data.knowledgeGraph.description || ''}`] : []),
@@ -168,39 +173,29 @@ const fetchPricesSerper = async (foodNames) => {
 
   if (!snippets) throw new Error('Serper returned no results');
 
-  // Use Gemini to extract structured prices from the search snippets
-  const geminiModel = getGeminiClient().getGenerativeModel({
-    model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
-    generationConfig: { temperature: 0.1, maxOutputTokens: 800 },
-  });
-
-  const extractPrompt = `
-You are a Pakistan food price analyst. Based on these Google search results, extract the current PKR serving-level prices for the food items listed.
+  const extractPrompt = `You are a Pakistan food price analyst. Based on these Google search results, extract current PKR serving-level prices.
 
 Search results:
 ${snippets}
 
-Food items to price (serving/portion price in PKR):
+Food items (serving/portion price in PKR):
 ${foodNames.map((n, i) => `${i + 1}. ${n}`).join('\n')}
 
 Rules:
-- Serving price = what one person pays for one meal portion (NOT per kg)
-- Dal/Sabzi bowl: PKR 60-120 | Roti per piece: PKR 12-30 | Chicken dish: PKR 200-350
-- If not found in search results, estimate based on your Pakistan market knowledge
-- Return ONLY valid JSON, no markdown, no explanation
+- Serving price = one person pays for one meal portion (NOT per kg)
+- Dal/Sabzi bowl: PKR 60-120 | Roti: PKR 12-30 | Chicken dish: PKR 200-350
+- If not in results, estimate from Pakistan market knowledge
+- Return ONLY valid JSON: {"Food Name": integer_pkr_price}
+All ${foodNames.length} items required.`;
 
-Format: {"Food Name": integer_pkr_price}
-All ${foodNames.length} items must be in the response.
-`.trim();
-
-  const result = await geminiModel.generateContent(extractPrompt);
-  const raw = result.response.text().trim()
+  const groqResult = await getGroqClient().invoke(extractPrompt);
+  const raw = groqResult.content.trim()
     .replace(/^```(?:json)?\s*/im, '')
     .replace(/\s*```\s*$/m, '')
     .trim();
 
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('No JSON in Serper+Gemini response');
+  if (!jsonMatch) throw new Error('No JSON in Serper+Groq response');
 
   const parsed = JSON.parse(jsonMatch[0]);
   const valid = {};
@@ -208,7 +203,6 @@ All ${foodNames.length} items must be in the response.
     const n = parseInt(v, 10);
     if (n > 0 && n < 50000) valid[k] = n;
   }
-
   return valid;
 };
 
@@ -235,19 +229,15 @@ Format: {"Food Name": integer_pkr_price}
 All ${foodNames.length} items must be included.
 `.trim();
 
-  const model = getGeminiClient().getGenerativeModel({
-    model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
-    generationConfig: { temperature: 0.1, maxOutputTokens: 1024 },
-  });
-
-  const result = await model.generateContent(prompt);
-  const raw = result.response.text().trim()
+  const model = getGroqClient();
+  const result = await model.invoke(prompt);
+  const raw = result.content.trim()
     .replace(/^```(?:json)?\s*/im, '')
     .replace(/\s*```\s*$/m, '')
     .trim();
 
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('No JSON in AI response');
+  if (!jsonMatch) throw new Error('No JSON in Groq AI price response');
 
   const parsed = JSON.parse(jsonMatch[0]);
   const valid = {};

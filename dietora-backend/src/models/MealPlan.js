@@ -109,6 +109,11 @@ const mealPlanSchema = new mongoose.Schema(
       static:   { type: Number, default: 0 },
     },
     priceLastUpdated: { type: Date, default: null },
+    priceStatus: {
+      type: String,
+      enum: ['updating', 'ready'],
+      default: 'ready',
+    },
     status: {
       type: String,
       enum: ['active', 'archived', 'draft'],

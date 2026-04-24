@@ -47,7 +47,9 @@ export const fetchMealPlanById = createAsyncThunk('mealPlan/fetchById', async (i
 export const fetchAlternatives = createAsyncThunk('mealPlan/alternatives', async ({ planId, day, meal }, { rejectWithValue }) => {
   try {
     const { data } = await api.get(`/meal-plans/${planId}/alternatives?day=${day}&meal=${meal}`)
-    return data?.data || data // assuming successResponse returns data inside data
+    // successResponse wraps in data.data — extract array safely
+    const result = data?.data || data
+    return Array.isArray(result) ? result : []
   } catch (err) {
     return rejectWithValue(err.response?.data?.message || 'Failed to fetch alternatives')
   }
@@ -113,6 +115,7 @@ function normalizePlan(plan) {
     priceDataSource:    plan.priceDataSource    || 'static',
     priceSourceSummary: plan.priceSourceSummary || { grounded: 0, ai: 0, static: 0 },
     priceLastUpdated:   plan.priceLastUpdated   || null,
+    priceStatus:        plan.priceStatus        || 'ready',
   }
 }
 
@@ -152,11 +155,8 @@ const mealPlanSlice = createSlice({
         state.current    = normalizePlan(rawPlan)
         if (state.current) state.list = [state.current, ...state.list.slice(0, 9)]
         state.selectedDay = 0
-        const src = state.current?.priceDataSource
-        const srcLabel = src === 'grounded' ? 'Live Google prices'
-          : src === 'ai' ? 'AI-estimated prices'
-          : 'Market research prices'
-        toast.success(`Plan ready! Prices from ${srcLabel}`)
+        // Prices start as static and update in background — always show this message
+        toast.success('✅ Plan generated! Live prices loading in background...')
       })
       .addCase(fetchMealPlans.pending,     (state)         => { state.loading = true })
       .addCase(fetchMealPlans.fulfilled,   (state, action) => {

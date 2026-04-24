@@ -17,7 +17,7 @@ const MealPlannerState = Annotation.Root({
     reducer: (curr, update) => update // always overwrite with latest validation errors
   }),
   generationAttempts: Annotation({
-    reducer: (curr, update) => curr + update,
+    reducer: (_, update) => update, // replace — nodes.js already increments correctly
     default: () => 0
   }),
   

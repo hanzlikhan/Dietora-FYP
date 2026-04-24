@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1',
   headers: { 'Content-Type': 'application/json' },
-  timeout: 30000,
+  timeout: 120000, // 120s — AI meal plan generation can take 20-60s
 })
 
 // ─── Request Interceptor: attach JWT ─────────────────────

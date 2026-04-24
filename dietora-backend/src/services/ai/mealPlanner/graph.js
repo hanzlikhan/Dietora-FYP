@@ -1,49 +1,38 @@
 // src/services/ai/mealPlanner/graph.js
+// DIETORA — LangGraph Workflow (Optimized: 2 nodes instead of 4)
+
+'use strict';
+
 const { StateGraph, END } = require("@langchain/langgraph");
 const { MealPlannerState } = require("./state");
-const { 
-  analyzeHealthProfileNode, 
-  filterFoodsNode, 
-  generateMealPlanNode, 
-  validatePlanNode 
-} = require("./nodes");
+const { filterFoodsNode, generateMealPlanNode, validatePlanNode } = require("./nodes");
 
-// Build the LangGraph workflow
 const buildMealPlannerGraph = () => {
   const workflow = new StateGraph(MealPlannerState)
-    .addNode("analyze_profile", analyzeHealthProfileNode)
     .addNode("filter_foods", filterFoodsNode)
     .addNode("generate_plan", generateMealPlanNode)
     .addNode("validate_plan", validatePlanNode)
-    
-    // Set Entry Point
-    .addEdge("__start__", "analyze_profile")
-    
-    // Analyze -> Filter -> Generate -> Validate
-    .addEdge("analyze_profile", "filter_foods")
+
+    // Entry → Filter (pure JS, instant) → Generate (1 AI call) → Validate
+    .addEdge("__start__", "filter_foods")
     .addEdge("filter_foods", "generate_plan")
     .addEdge("generate_plan", "validate_plan")
-    
-    // Conditional edge from Validate
+
+    // Conditional: success → done | retry (max 2) → regenerate | max_retries → done
     .addConditionalEdges(
       "validate_plan",
       (state) => {
-        // If no errors, we are done
-        if (!state.validationErrors || state.validationErrors.length === 0) {
-          return "success";
-        }
-        // If errors exist but we exceeded retry limit (e.g., 3), exit to prevent infinite loop
-        if (state.generationAttempts >= 3) {
-          console.warn("[LangGraph] Max retries reached. Forcing exit with current (possibly flawed) plan.");
+        if (!state.validationErrors || state.validationErrors.length === 0) return "success";
+        if (state.generationAttempts >= 2) {
+          console.warn("[LangGraph] Max 2 retries reached. Exiting with best-effort plan.");
           return "max_retries";
         }
-        // Otherwise, loop back to generation to fix errors
         return "retry";
       },
       {
-        success: END,
+        success:     END,
         max_retries: END,
-        retry: "generate_plan"
+        retry:       "generate_plan",
       }
     );
 
