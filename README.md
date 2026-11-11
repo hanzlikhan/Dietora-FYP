@@ -1,9 +1,9 @@
 # 🥗 DIETORA — AI-Powered Diet Planning System
 
 > **Final Year Project (FYP) — Government College University Faisalabad (GCUF)**
-> Department of Computer Science & Information Technology | 2026
+> Department of Computer Science | 2026
 
-DIETORA is a full-stack web application that generates personalized 7-day Pakistani meal plans based on a user's health conditions (diabetes, hypertension, cardiac), food allergies, and daily budget in PKR — using local Faisalabad market prices and authentic desi foods.
+DIETORA is a full-stack and Agentic AI web application that generates personalized 7-day Pakistani meal plans based on a user's health conditions (diabetes, hypertension, cardiac), food allergies, and daily budget in PKR — using local Faisalabad market prices and authentic desi foods.
 
 ---
 
@@ -357,9 +357,9 @@ Then run only the backend: `npm run dev` — it serves both API and frontend.
 
 ## 👥 Team & Acknowledgements
 
-- **Institution**: University of Agriculture Faisalabad (UAF)
-- **Department**: Computer Science & Information Technology
-- **Project Type**: Final Year Project (FYP) 2024–2025
+- **Institution**: Government College University Faisalabad (GCUF)
+- **Department**: Computer Science
+- **Project Type**: Final Year Project (FYP) 2026
 - **Target Users**: Pakistani families, especially those with chronic health conditions
 - **Scope**: Faisalabad, Punjab, Pakistan
 
