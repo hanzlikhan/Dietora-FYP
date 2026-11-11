@@ -1,375 +1,306 @@
 # 🥗 DIETORA — AI-Powered Diet Planning System
 
-> **Final Year Project (FYP) — Government College University Faisalabad (GCUF)**
-> Department of Computer Science | 2026
+> Final Year Project (FYP) • Government College University Faisalabad (GCUF)
+> AI-powered nutrition and meal planning platform for healthy, affordable, disease-aware eating.
 
-DIETORA is a full-stack and Agentic AI web application that generates personalized 7-day Pakistani meal plans based on a user's health conditions (diabetes, hypertension, cardiac), food allergies, and daily budget in PKR — using local Faisalabad market prices and authentic desi foods.
+DIETORA is a full-stack web application that helps users generate personalized 7-day meal plans based on their health profile, food allergies, budget, and chronic condition needs. The system combines a React frontend, Express + MongoDB backend, and AI-powered nutrition assistance with Groq integration for faster chatbot responses.
 
----
+## Highlights
 
-## 📸 Pages Overview
-
-| Page | Description |
-|------|-------------|
-| 🏠 Landing | Hero, features, disease modes, testimonials, CTA |
-| ℹ️ About | Project info, tech stack, UAF details |
-| ❓ FAQ | 20+ accordion questions across 5 categories |
-| 🔐 Login | Split-panel login with form validation |
-| 📝 Register | Registration with password strength check |
-| 📊 Dashboard | BMI stats, quick actions, latest meal plan preview |
-| 👤 Health Profile | BMI meter, goal, activity level, disease flags, budget |
-| 🍽️ Meal Planner | 7-day tab view with 4 meal cards/day + nutrition summary |
-| 🛒 Grocery List | Auto-generated, grouped by category, mark purchased |
-| 💰 Budget Optimizer | Cost vs budget analysis + cheaper meal suggestions |
-| 📈 Progress Charts | Recharts line, bar, pie charts for calories & budget |
-| 📚 Educational Hub | 6 articles on diabetes, hypertension, cardiac, nutrition |
-| 🤖 AI Chatbot | Floating widget with rule-based nutrition Q&A |
-| 💬 Feedback | Star rating + category + free-text submission |
-| ⚙️ Admin Panel | Food CRUD + user management (admin role only) |
+- Personalized 7-day meal plans for diabetes, hypertension, and cardiac conditions
+- AI-assisted nutrition chatbot for user queries
+- Budget-aware and affordability-based food suggestions
+- Grocery list generation from selected meal plans
+- Educational health content tailored for Pakistani users
+- Admin dashboard for food and user management
+- Responsive UI for desktop and mobile
+- Secure authentication and role-based access control
 
 ---
 
-## 🏗️ Project Structure
-
-```
-FYP/
-├── dietora-backend/          # Node.js + Express + MongoDB API
-│   ├── src/
-│   │   ├── app.js            # Express app setup
-│   │   ├── server.js         # Entry point
-│   │   ├── config/
-│   │   │   └── database.js   # MongoDB connection
-│   │   ├── controllers/      # Route handlers (8 controllers)
-│   │   ├── middleware/        # auth, error, validation
-│   │   ├── models/           # Mongoose schemas (7 models)
-│   │   ├── routes/           # Express routers (8 route files)
-│   │   ├── seeders/          # Pakistani food data + admin seed
-│   │   ├── services/         # Business logic (meal planner, grocery, chatbot)
-│   │   ├── utils/            # JWT helpers, response formatters
-│   │   └── validators/       # Zod input schemas
-│   ├── .env                  # Environment variables (see setup)
-│   └── package.json
-│
-├── dietora-frontend/         # React + Vite + Tailwind CSS SPA
-│   ├── src/
-│   │   ├── App.jsx           # Router + protected routes
-│   │   ├── main.jsx          # Redux Provider + BrowserRouter
-│   │   ├── index.css         # Tailwind + custom classes
-│   │   ├── components/
-│   │   │   ├── charts/       # Recharts wrappers
-│   │   │   ├── layout/       # Navbar, Sidebar, TopBar, Footer
-│   │   │   ├── ui/           # Reusable UI primitives
-│   │   │   └── ChatbotWidget.jsx
-│   │   ├── context/          # ModalContext
-│   │   ├── hooks/            # useProfile, useMealPlans, useDebounce
-│   │   ├── pages/            # 15 page components
-│   │   ├── services/
-│   │   │   └── api.js        # Axios instance + interceptors
-│   │   ├── store/
-│   │   │   ├── store.js      # Redux store
-│   │   │   └── slices/       # 6 Redux slices
-│   │   └── utils/
-│   │       └── helpers.js    # BMI/BMR/TDEE helpers, formatters
-│   ├── .env                  # VITE_API_BASE_URL
-│   ├── vite.config.js        # Dev proxy + build config
-│   └── package.json
-│
-├── docs/                     # Project documentation
-│   ├── API_Reference.md      # All endpoints documented
-│   ├── SRS_Traceability_Matrix.md  # SRS → code mapping
-│   └── screenshots/          # Page screenshots for report
-│
-└── README.md                 # This file
-```
-
----
-
-## ⚙️ Tech Stack
-
-### Backend
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| Node.js | 18+ | Runtime |
-| Express.js | 4.18 | HTTP framework |
-| MongoDB | 6+ | Database |
-| Mongoose | 8 | ODM |
-| JWT (jsonwebtoken) | 9 | Authentication |
-| bcryptjs | 2.4 | Password hashing |
-| Zod | 3.22 | Input validation |
-| Helmet | 7 | Security headers |
-| express-rate-limit | 7 | Rate limiting |
-| Morgan | 1.10 | HTTP logging |
+## 🧩 What this project includes
 
 ### Frontend
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| React | 18.2 | UI framework |
-| Vite | 5 | Build tool |
-| Tailwind CSS | 3.4 | Styling |
-| Redux Toolkit | 2.2 | State management |
-| React Router v6 | 6.22 | Client-side routing |
-| Axios | 1.6 | HTTP client |
-| Recharts | 2.12 | Charts |
-| react-hot-toast | 2.4 | Toast notifications |
+- React + Vite + Tailwind CSS
+- Redux Toolkit for state management
+- Recharts for progress and analytics
+- Role-based protected routes
+- Dynamic dashboard, meal planner, education, chatbot, and admin experience
+
+### Backend
+- Node.js + Express.js
+- MongoDB + Mongoose
+- JWT authentication and secure route guards
+- Health profile validation and BMI/BMR/TDEE calculations
+- Meal generation logic and grocery workflows
+- AI chatbot integration using Groq
+
+### AI / Nutrition Features
+- Disease-safe filtering based on user health conditions
+- Budget optimization and smarter food selections
+- Personalized calorie targeting by goal and activity level
+- Grocery generation from plan data
+- Chatbot with health and nutrition responses and store/location intent support
 
 ---
 
-## 🚀 Quick Start — Local Development
+## 🏗️ Repository structure
 
-### Prerequisites
-- **Node.js** v18 or higher ([download](https://nodejs.org))
-- **MongoDB** — either:
-  - Local: [Install MongoDB Community](https://www.mongodb.com/try/download/community) and run `mongod`
-  - Cloud: [MongoDB Atlas free tier](https://www.mongodb.com/atlas) (recommended)
-- **npm** v9+ (comes with Node.js)
-- **Git** (optional)
+```text
+Dietora-FYP/
+├── README.md
+├── GROQ_MIGRATION_COMPLETE.md
+├── running commanda
+├── docs/
+│   └── screenshots/
+│       └── README.md
+├── dietora-backend/
+│   ├── src/
+│   │   ├── app.js
+│   │   ├── server.js
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── seeders/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── validators/
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── package.json
+│   └── README.md
+├── dietora-frontend/
+│   ├── src/
+│   ├── public/
+│   ├── .env.example
+│   ├── package.json
+│   ├── vite.config.js
+│   └── index.html
+└── docs/
+    ├── API_Reference.md
+    └── SRS_Traceability_Matrix.md
+```
 
 ---
 
-### Step 1 — Setup Backend
+## ⚙️ Tech stack
+
+### Backend
+- Node.js 18+
+- Express.js
+- MongoDB
+- Mongoose
+- JWT
+- bcryptjs
+- Zod
+- Helmet
+- express-rate-limit
+- Groq SDK
+
+### Frontend
+- React 18
+- Vite
+- Tailwind CSS
+- Redux Toolkit
+- React Router
+- Axios
+- Recharts
+- react-hot-toast
+
+---
+
+## ✨ Main features
+
+### User features
+- Register/login with JWT authentication
+- Health profile creation and update
+- BMI, BMR, and TDEE calculations
+- Diet recommendations by goal: weight loss, maintenance, or gain
+- Disease-aware food filtering for chronic conditions
+- Budget-based meal planning
+- Grocery list generation and purchase tracking
+- Progress analytics and dashboard insights
+- Educational nutrition content
+- Feedback and review system
+
+### Admin features
+- Food item management
+- User overview and management
+- Basic analytics and monitoring
+- Secure admin access only
+
+### AI assistant
+- Chatbot for nutrition and diet guidance
+- Groq-powered response generation
+- Prompt-based health-aware conversations
+- Optional intent routing and location-related query handling
+
+---
+
+## 🚀 Quick start
+
+### 1) Clone the repository
 
 ```bash
-# Navigate to backend folder
-cd C:\Users\dell\Desktop\FYP\dietora-backend
+git clone https://github.com/hanzlikhan/Dietora-FYP.git
+cd Dietora-FYP
+```
 
-# Install dependencies
+### 2) Setup backend
+
+```bash
+cd dietora-backend
 npm install
 ```
 
-The `.env` file is already created. If you want to use MongoDB Atlas, edit it:
+Create a `.env` file by copying the example:
+
 ```bash
-# Open .env and set your MongoDB URI
-notepad .env
+cp .env.example .env
 ```
 
-Minimum `.env` for local MongoDB (no changes needed if mongod is running):
-```
+Then set the required environment variables:
+
+```env
 PORT=5000
 NODE_ENV=development
 MONGODB_URI=mongodb://localhost:27017/dietora
-JWT_SECRET=dietora_fyp_uaf_super_secret_jwt_2025_change_this
+JWT_SECRET=your_super_secret_key
 JWT_EXPIRES_IN=7d
 ADMIN_EMAIL=admin@dietora.pk
 ADMIN_PASSWORD=Admin@12345
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=mixtral-8x7b-32768
 ```
 
+Optional but recommended values:
+
+```env
+CLIENT_URL=http://localhost:5173
+```
+
+### 3) Seed the database
+
 ```bash
-# Seed 35 Pakistani foods into the database
 npm run seed
-
-# Create the admin account
 npm run seed:admin
-
-# Start backend development server
-npm run dev
 ```
 
-✅ Backend running at: `http://localhost:5000`
-✅ Health check: `http://localhost:5000/health`
-
----
-
-### Step 2 — Setup Frontend
-
-Open a **new terminal window**:
+### 4) Start backend
 
 ```bash
-# Navigate to frontend folder
-cd C:\Users\dell\Desktop\FYP\dietora-frontend
-
-# Install dependencies
-npm install
-
-# Start frontend development server
 npm run dev
 ```
 
-✅ Frontend running at: `http://localhost:5173`
+Backend will run at:
+- http://localhost:5000
+- Health check: http://localhost:5000/health
 
-> **Note**: The Vite dev proxy automatically forwards all `/api/*` requests to `http://localhost:5000` — no CORS issues in development.
+### 5) Setup frontend
+
+Open a new terminal:
+
+```bash
+cd dietora-frontend
+npm install
+npm run dev
+```
+
+Frontend will run at:
+- http://localhost:5173
 
 ---
 
-### Step 3 — Open the App
-
-1. Open your browser → `http://localhost:5173`
-2. Click **"Get Started"** or **"Login"**
-3. To test admin features: use `admin@dietora.pk` / `Admin@12345`
-
----
-
-## 🔐 Default Credentials
+## 🔐 Default admin credentials
 
 | Role | Email | Password |
 |------|-------|----------|
 | Admin | admin@dietora.pk | Admin@12345 |
-| User (demo) | Register any account | Your choice |
 
-> ⚠️ Change the admin password in `.env` before any deployment.
+> Change admin credentials before production deployment.
 
 ---
 
-## 🌱 Database Seeding
+## 🧠 How meal generation works
 
-The seeders add:
-- **35 authentic Pakistani foods** with Faisalabad market prices (PKR)
-- **Safety flags** for diabetes, hypertension, cardiac conditions
-- **Allergen tags** (gluten, dairy, eggs, nuts, etc.)
-- **Meal type assignments** (breakfast, lunch, dinner, snack)
+The system follows a practical nutrition planning flow:
+
+1. Read the user profile and health constraints
+2. Fetch available foods from MongoDB
+3. Filter allergens and disease-sensitive items
+4. Group foods by meal category
+5. Optimize for calorie target and budget
+6. Generate 7-day meal plans with variety
+7. Compute weekly summaries and grocery outputs
+
+This keeps the process fast, affordable, and suitable for practical decision-making in a FYP setting.
+
+---
+
+## 📦 Key scripts
+
+### Backend
 
 ```bash
-# Re-run seeds anytime (clears and re-inserts foods)
-npm run seed
-
-# Re-create admin account (skips if already exists)
-npm run seed:admin
+npm run dev     # start development server with nodemon
+npm run start   # start production server
+npm run seed    # seed Pakistani foods into MongoDB
+npm run seed:admin   # create default admin user
 ```
 
----
-
-## 🧠 AI Meal Generation — How It Works
-
-The meal planner runs a **greedy optimization pipeline** in < 2 seconds:
-
-```
-1. fetchConstraints()     → Extract calorie target, budget, diseases, allergies from profile
-2. fetchAvailableFoods()  → Query MongoDB for all available food items
-3. filterAllergens()      → Remove foods containing user's allergens
-4. filterByDiseases()     → Keep only disease-safe foods (AND logic for multiple conditions)
-5. groupByMealType()      → Group remaining foods by breakfast/lunch/dinner/snack
-6. optimizeBudget()       → Sort by calorie-per-PKR ratio, filter by per-meal budget
-7. generate7DayPlan()     → Pick foods with variety tracking across all 7 days
-8. calculateSummaries()   → Weekly totals for cost, calories, macros
-```
-
-**Why it's fast (< 2 seconds):**
-- Pure JavaScript — no external AI API calls
-- MongoDB compound indexes on disease flags + category
-- Simple greedy selection (no backtracking)
-- Runs in-memory once foods are fetched
-
----
-
-## 🏭 Production Build
-
-### Build Frontend
+### Frontend
 
 ```bash
-cd dietora-frontend
-npm run build
-# Output: dietora-frontend/dist/
+npm run dev     # Vite dev server
+npm run build   # production build
+npm run preview # local preview of production build
 ```
 
-The `dist/` folder can be:
-- Served by Nginx or Apache
-- Deployed to Vercel / Netlify (connect GitHub repo)
-- Served by the Express backend (see below)
+---
 
-### Serve Frontend from Express (Optional)
+## 🧪 Deployment notes
 
-Add this to `dietora-backend/src/app.js` after building the frontend:
+### Frontend deployment
+- Deploy `dietora-frontend` to Vercel or Netlify
+- Set `VITE_API_BASE_URL` to your backend URL
 
-```javascript
-const path = require('path')
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, '../../dietora-frontend/dist')))
-// SPA fallback — all non-API routes serve index.html
-app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, '../../dietora-frontend/dist/index.html'))
-  }
-})
-```
-
-Then run only the backend: `npm run dev` — it serves both API and frontend.
-
-### Deploy Backend (Example: Railway / Render)
-
-1. Push code to GitHub
-2. Connect repo to [Railway](https://railway.app) or [Render](https://render.com)
-3. Set environment variables from `.env`
-4. Deploy — they detect Node.js automatically
-
-### Deploy Frontend (Example: Vercel)
-
-1. Push `dietora-frontend/` to GitHub
-2. Connect to [Vercel](https://vercel.com)
-3. Set `VITE_API_BASE_URL` = your deployed backend URL
-4. Deploy — Vercel detects Vite automatically
+### Backend deployment
+- Deploy `dietora-backend` to Railway, Render, or VPS
+- Add all environment variables from `.env`
+- Use MongoDB Atlas or a managed MongoDB service for production
 
 ---
 
-## 📊 Features Checklist
+## 📚 Documentation
 
-### Core Features
-- [x] User registration & login with JWT
-- [x] Health profile (age, gender, weight, height, activity, goal)
-- [x] Auto BMI, BMR (Mifflin-St Jeor), TDEE calculation
-- [x] Disease flags: Diabetes / Hypertension / Cardiac
-- [x] Allergen exclusions (6 types)
-- [x] Daily budget in PKR
-- [x] AI 7-day meal plan generation (< 2 seconds)
-- [x] Day-by-day meal view with nutrition breakdown
-- [x] Auto-generated grocery list from meal plan
-- [x] Mark items as purchased with progress tracking
-- [x] Budget vs plan analysis with adherence percentage
-- [x] Budget optimization with cheaper food alternatives
-- [x] Recharts progress: calories, budget, macros, adherence
-- [x] 6 educational articles on Pakistani nutrition
-- [x] Floating AI chatbot with 15+ nutrition intents
-- [x] Feedback submission with star rating
-- [x] Admin: food CRUD, user management, analytics
-- [x] Dark mode toggle (persists to localStorage)
-- [x] Fully responsive (mobile, tablet, desktop)
-- [x] Toast notifications on all user actions
-- [x] Protected routes with auth guards
-- [x] Loading states on all async operations
-- [x] Global error handling (frontend + backend)
-- [x] Rate limiting (100 req/15min, 20 auth req/15min)
+This repo includes several documentation resources:
+
+- `GROQ_MIGRATION_COMPLETE.md` — AI migration notes and implementation summary
+- `docs/API_Reference.md` — API documentation
+- `docs/SRS_Traceability_Matrix.md` — project traceability matrix
+- `docs/screenshots/README.md` — screenshot capture workflow
+- `dietora-backend/README.md` — backend-specific setup and API guide
 
 ---
 
-## 🗂️ Documentation
+## 🧾 Project status
 
-| Document | Location |
-|----------|---------|
-| API Reference | `docs/API_Reference.md` |
-| SRS Traceability Matrix | `docs/SRS_Traceability_Matrix.md` |
-| Screenshots Guide | `docs/screenshots/README.md` |
-| Running Commands | `running commanda` (root) |
-
----
-
-## 🐛 Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| `Cannot connect to MongoDB` | Run `mongod` locally, or check Atlas URI in `.env` |
-| `Port 5000 already in use` | Change `PORT=5001` in `.env` and update frontend `.env` |
-| `Token expired` | Login again — JWT expires after 7 days |
-| `Not enough food items` | Run `npm run seed` in backend folder |
-| `Admin routes return 403` | Login with admin credentials, not a regular user account |
-| `Meal plan not generating` | Ensure health profile is saved first (`/profile`) |
-| Frontend shows `Network Error` | Make sure backend is running at port 5000 |
-| `CORS error` | Vite proxy handles dev CORS — ensure you're on `localhost:5173` |
-
----
-
-## 👥 Team & Acknowledgements
-
-- **Institution**: Government College University Faisalabad (GCUF)
-- **Department**: Computer Science
-- **Project Type**: Final Year Project (FYP) 2026
-- **Target Users**: Pakistani families, especially those with chronic health conditions
-- **Scope**: Faisalabad, Punjab, Pakistan
+This repository is a complete full-stack FYP project with:
+- working backend API
+- functional frontend application
+- database seeding
+- admin workflow
+- AI nutrition assistance
+- Groq migration already completed
 
 ---
 
 ## 📜 License
 
-This project is developed as an academic Final Year Project at UAF Faisalabad.
-For academic use only. All rights reserved © 2025 DIETORA Team.
+This project is developed for academic use as a Final Year Project. Please check with the author/institution before reusing it in commercial or public production contexts.
 
 ---
 
-*Built with ❤️ for healthier Pakistan 🇵🇰*
+Built with care for healthier, smarter, and more affordable nutrition decisions in Pakistan. 🇵🇰
