@@ -1,7 +1,7 @@
 # 🥗 DIETORA — AI-Powered Diet Planning System
 
 > **Final Year Project (FYP) — Government College University Faisalabad (GCUF)**
-> Department of Computer Science & Information Technology | 2024–2025
+> Department of Computer Science & Information Technology | 2026
 
 DIETORA is a full-stack web application that generates personalized 7-day Pakistani meal plans based on a user's health conditions (diabetes, hypertension, cardiac), food allergies, and daily budget in PKR — using local Faisalabad market prices and authentic desi foods.
 
